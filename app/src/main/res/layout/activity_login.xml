@@ -4,6 +4,65 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activities.LoginActivity">
+    tools:context=".Activities.LoginActivity"
+    android:orientation="vertical"
+    android:background="@color/navy"
+    android:padding="15dp">
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Login"
+        android:textColor="@color/white"
+        android:textSize="60sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/userEmail"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <EditText
+        android:id="@+id/userEmail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/edit_text_background"
+        android:hint="Email..."
+        android:padding="15dp"
+        android:layout_marginBottom="20dp"
+        app:layout_constraintBottom_toTopOf="@+id/userPassword"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <EditText
+        android:id="@+id/userPassword"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/edit_text_background"
+        android:hint="Password..."
+        android:padding="15dp"
+        app:layout_constraintBottom_toTopOf="@+id/RegisterBtn"
+        tools:layout_editor_absoluteX="15dp" />
+
+    <Button
+        android:id="@+id/RegisterBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/white"
+        android:padding="10dp"
+        android:text="Login"
+        android:textColor="@color/navy"
+        android:textSize="20sp"
+        app:cornerRadius="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:layout_editor_absoluteX="15dp" />
+
+
+
+
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
