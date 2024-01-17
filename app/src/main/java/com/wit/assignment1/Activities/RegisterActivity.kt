@@ -2,8 +2,10 @@ package com.wit.assignment1.Activities
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
@@ -15,6 +17,7 @@ class RegisterActivity : AppCompatActivity() {
     private lateinit var useremail: EditText
     private lateinit var userpass: EditText
     private lateinit var btnRegister: Button
+    private lateinit var btntoLogin: TextView
     private  var mAuth: FirebaseAuth? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,16 +26,27 @@ class RegisterActivity : AppCompatActivity() {
         useremail = findViewById(R.id.userEmail)
         userpass = findViewById(R.id.userPassword)
         btnRegister = findViewById(R.id.RegisterBtn)
+        btntoLogin = findViewById(R.id.toLogin)
 
         mAuth = FirebaseAuth.getInstance();
 
+
+        btntoLogin.setOnClickListener {
+
+                startActivity(
+                    Intent(this@RegisterActivity, LoginActivity::class.java).addFlags(
+                        Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+                    )
+                )
+
+        }
 
         btnRegister.setOnClickListener {
             val txtEmail: String = useremail.getText().toString().trim()
             val txtPassword: String = userpass.getText().toString()
 
             mAuth!!.createUserWithEmailAndPassword(txtEmail, txtPassword).addOnSuccessListener {
-              
+
                 val intent = Intent(
                     this@RegisterActivity,
                     MainActivity::class.java
@@ -49,5 +63,13 @@ class RegisterActivity : AppCompatActivity() {
         }
 
 
+    }
+
+    override fun onStart() {
+        super.onStart()
+        if (FirebaseAuth.getInstance().currentUser != null) {
+            startActivity(Intent(this@RegisterActivity, MainActivity::class.java))
+            finish()
+        }
     }
 }
