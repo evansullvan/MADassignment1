@@ -18,6 +18,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
 import com.wit.assignment1.Fragments.AddHouseDetailsFragment
 import com.wit.assignment1.Fragments.ListHouseFragment
 import com.wit.assignment1.R
@@ -39,6 +40,11 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(com.wit.assignment1.R.layout.activity_main)
+
+        FirebaseDatabase.getInstance("https://daftproject-77b1f-default-rtdb.europe-west1.firebasedatabase.app")
+            .setPersistenceEnabled(true)
+
+
 
         logout = findViewById(R.id.logout)
         val mAuth = FirebaseAuth.getInstance()
@@ -92,7 +98,7 @@ class MainActivity : AppCompatActivity() {
 
             logout.setOnClickListener {
                 FirebaseAuth.getInstance().signOut()
-                
+
                 val intent = Intent(this, LoginActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 startActivity(intent)

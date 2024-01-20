@@ -2,4 +2,6 @@
     <string name="app_name">assignment1</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="empty_field_message">Dont leave any empty fields</string>
 </resources>
