@@ -15,6 +15,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.wit.assignment1.Activities.MainActivity
+import com.wit.assignment1.Model.House
 import com.wit.assignment1.R
 
 
@@ -40,7 +41,19 @@ class AddHouseDetailsFragment : Fragment() {
         address = view.findViewById(R.id.address)
         post = view.findViewById(R.id.postbtn)
 
+        val postf = arguments?.getSerializable("post") as? House
+        if (post != null) {
 
+            if (postf != null) {
+                price.setText(postf.price.toString())
+            }
+            if (postf != null) {
+                roomamount.setText(postf.roomamount.toString())
+            }
+            if (postf != null) {
+                sqft.setText(postf.houseSize.toString())
+            }
+        }
 
         post.setOnClickListener { upload() }
 
@@ -51,64 +64,97 @@ class AddHouseDetailsFragment : Fragment() {
     }
 
     private fun upload() {
-        var houseprice: String = price.getText().toString().trim()
-        var housesize: String = sqft.getText().toString().trim()
-        var houseromms: String = roomamount.getText().toString().trim()
+        var houseprice: String = price.text.toString().trim()
+        var housesize: String = sqft.text.toString().trim()
+        var houserooms: String = roomamount.text.toString().trim()
 
         val timeInMillis = System.currentTimeMillis()
-        // Remove leading and trailing spaces
-        houseprice = houseprice.trim { it <= ' ' }
-        houseromms = houseromms.trim { it <= ' ' }
-        housesize = housesize.trim { it <= ' ' }
 
-        // Remove multiple consecutive spaces
+        houseprice = houseprice.trim()
+        houserooms = houserooms.trim()
+        housesize = housesize.trim()
+
         houseprice = houseprice.replace("\\s+".toRegex(), " ")
-        houseromms = houseromms.replace("\\s+".toRegex(), " ")
+        houserooms = houserooms.replace("\\s+".toRegex(), " ")
         housesize = housesize.replace("\\s+".toRegex(), " ")
+
         if (houseprice.isEmpty()) {
-           price.setError("empty")
+            price.error = "empty"
             return
         }
-        if (houseromms.isEmpty()) {
-            roomamount.setError("empty")
+        if (houserooms.isEmpty()) {
+            roomamount.error = "empty"
             return
         }
         if (housesize.isEmpty()) {
-            sqft.setError("empty")
+            sqft.error = "empty"
             return
         }
 
-Log.e("upload function", "finished all validation")
-
-
         val ref = FirebaseDatabase.getInstance().getReference("Posts")
-        Log.e("upload function", "got reference and put in val ref")
-        val postId = ref.push().key
-        Log.e("upload function", "got post id")
+
+        // Check if updating an existing post
+        val post: House? = arguments?.getSerializable("post") as? House
+        if (post != null) {
+            updatePost(ref, post, houseprice, houserooms, housesize)
+        } else {
+            createNewPost(ref, houseprice, houserooms, housesize, timeInMillis)
+        }
+    }
+
+    private fun updatePost(
+        ref: DatabaseReference,
+        post: House,
+        houseprice: String,
+        houserooms: String,
+        housesize: String
+    ) {
         val map = HashMap<String, Any?>()
-        Log.e("upload function", "start of creating map")
+        map["price"] = houseprice
+        map["roomamount"] = houserooms
+        map["houseSize"] = housesize
+        map["timestamp"] = System.currentTimeMillis()
+
+        ref.child(post.postId).updateChildren(map)
+            .addOnSuccessListener {
+                startActivity(Intent(requireContext(), MainActivity::class.java))
+                activity?.finish()
+            }
+            .addOnFailureListener {
+                Log.e("UpdatePost", "Failed to update post")
+            }
+    }
+
+    private fun createNewPost(
+        ref: DatabaseReference,
+        houseprice: String,
+        houserooms: String,
+        housesize: String,
+        timeInMillis: Long
+    ) {
+        val postId = ref.push().key
+        val map = HashMap<String, Any?>()
         map["postId"] = postId
         map["price"] = houseprice
-        map["roomamount"] = houseromms
+        map["roomamount"] = houserooms
         map["houseSize"] = housesize
         map["publisher"] = FirebaseAuth.getInstance().currentUser!!.uid
         map["timestamp"] = timeInMillis
-        Log.e("upload function", "end of creating map")
-        if (postId != null) {
-            ref.child(postId).setValue(map).addOnSuccessListener {
-                startActivity(Intent(requireContext(), MainActivity::class.java))
-                Log.e("upload function", "successfully added post")
-                activity?.finish()
-            }.addOnFailureListener {
-                // Toast.makeText(requireContext(), "Failed to ask the question", Toast.LENGTH_SHORT).show()
-                Log.e("upload function", "post failed")
-            }
-        }else{
-            Toast.makeText(requireContext(), "error making post try again", Toast.LENGTH_SHORT).show()
-            Log.e("upload function", "error making post try again")
-        }
 
+        if (postId != null) {
+            ref.child(postId).setValue(map)
+                .addOnSuccessListener {
+                    startActivity(Intent(requireContext(), MainActivity::class.java))
+                    activity?.finish()
+                }
+                .addOnFailureListener {
+                    Log.e("CreateNewPost", "Failed to create new post")
+                }
+        } else {
+            Toast.makeText(requireContext(), "Error making post. Try again.", Toast.LENGTH_SHORT).show()
+        }
     }
+
 
 
 }
