@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".Activities.RegisterActivity"
     android:orientation="vertical"
-    android:background="@color/navy"
+    android:background="@color/blue"
     android:padding="15dp">
 
 
@@ -67,7 +67,7 @@
         android:backgroundTint="@color/white"
         android:padding="10dp"
         android:text="Register"
-        android:textColor="@color/navy"
+        android:textColor="@color/blue"
         android:textSize="20sp"
         app:cornerRadius="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
