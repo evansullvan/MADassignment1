@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.PopupMenu
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
@@ -19,7 +20,7 @@ import com.wit.assignment1.Model.House
 import com.wit.assignment1.R
 
 
-class ListHouseFragment : Fragment() {
+class ListHouseFragment : Fragment(), HouseItemClickListener {
 
     private lateinit var recyclerViewPosts: RecyclerView
 
@@ -38,13 +39,36 @@ class ListHouseFragment : Fragment() {
         linearLayoutManager.stackFromEnd = true
         linearLayoutManager.reverseLayout = true
         recyclerViewPosts.layoutManager = linearLayoutManager
+
         postList = ArrayList<House>()
-        postAdapter = context?.let { HouseAdapter(it, postList as ArrayList<House>) }
-        recyclerViewPosts.setAdapter(postAdapter)
+        postAdapter = context?.let { HouseAdapter(it, postList as ArrayList<House>, this) }
+        recyclerViewPosts.adapter = postAdapter
+
         readPosts()
+
         return view
     }
+    override fun onDeleteClick(post: House) {
+        // Handle delete action
+        val postReference = FirebaseDatabase.getInstance().reference.child("Posts").child(post.postId)
+        postReference.removeValue()
+    }
 
+    override fun onUpdateClick(post: House) {
+        // Handle update action
+        val addPostFragment = AddHouseDetailsFragment()
+
+        // Pass the post details to the fragment
+        val bundle = Bundle()
+        bundle.putSerializable("post", post)
+        addPostFragment.arguments = bundle
+
+        // Navigate to the AddPostFragment
+        val transaction = requireActivity().supportFragmentManager.beginTransaction()
+        transaction.replace(R.id.fragment_container, addPostFragment)
+        transaction.addToBackStack(null)
+        transaction.commit()
+    }
 
     private fun readPosts() {
         FirebaseDatabase.getInstance().reference.child("Posts")
@@ -67,8 +91,11 @@ class ListHouseFragment : Fragment() {
 
 }
 
-
-class HouseAdapter(mContext: Context, mPosts: List<House>) : RecyclerView.Adapter<HouseAdapter.Viewholder>() {
+interface HouseItemClickListener {
+    fun onDeleteClick(post: House)
+    fun onUpdateClick(post: House)
+}
+class HouseAdapter(mContext: Context, mPosts: List<House>,  private val itemClickListener: HouseItemClickListener) : RecyclerView.Adapter<HouseAdapter.Viewholder>() {
 
     private val mContext: Context = mContext
     private val mPosts: List<House> = mPosts
@@ -90,24 +117,54 @@ class HouseAdapter(mContext: Context, mPosts: List<House>) : RecyclerView.Adapte
         val post: House = mPosts!![position]
         val activity = mContext as FragmentActivity
         val fragment = activity.supportFragmentManager.findFragmentById(R.id.fragment_container)
+
+        holder.Price.text = "Price: "+post.price.toString()
+        holder.roomamount.text = "Room amount: "+post.roomamount.toString()
+        holder.houseSize.text ="House size: "+ post.houseSize
+
+        holder.itemView.setOnLongClickListener {
+            showPopupMenu(holder.itemView, post)
+            true
+        }
+
+
+
     }
 
     override fun getItemCount(): Int = mPosts.size
+    private fun showPopupMenu(view: View, post: House) {
+        val popupMenu = PopupMenu(mContext, view)
+        popupMenu.menuInflater.inflate(R.menu.post_options_menu, popupMenu.menu)
 
+        popupMenu.setOnMenuItemClickListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.menu_update -> {
+                    itemClickListener.onUpdateClick(post)
+                    true
+                }
+                R.id.menu_delete -> {
+                    itemClickListener.onDeleteClick(post)
+                    true
+                }
+                else -> false
+            }
+        }
 
+        popupMenu.show()
+    }
 
 
     class Viewholder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         lateinit var imageProfile: ImageView
         var Price: TextView
         var roomamount: TextView
-        var address: TextView
+        var houseSize: TextView
 
         init {
             //imageProfile = itemView.findViewById<ImageView>(R.id.image_profile)
          Price = itemView.findViewById(R.id.housePrice);
             roomamount = itemView.findViewById(R.id.houseroomamount);
-            address = itemView.findViewById(R.id.houseaddress);
+            houseSize = itemView.findViewById(R.id.housesize);
         }
     }
 }
