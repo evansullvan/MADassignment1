@@ -10,6 +10,7 @@ import android.widget.AdapterView
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Spinner
+import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.google.firebase.auth.FirebaseAuth
@@ -25,7 +26,7 @@ class AddHouseDetailsFragment : Fragment() {
     private lateinit var roomamount: EditText
     private lateinit var sqft: EditText
     private lateinit var address: Button
-    private lateinit var post: Button
+    private lateinit var post: TextView
     private lateinit var spinnerHouseType: Spinner
 
     override fun onCreateView(
