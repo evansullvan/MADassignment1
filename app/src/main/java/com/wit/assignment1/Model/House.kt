@@ -7,8 +7,9 @@ data class House(
     val roomamount: String,
     val houseSize: String,
     val publisher: String,
+    val houseType: String,
     val postId: String
 ):Serializable {
 
-    constructor() : this("0", "0", "0","0","")
+    constructor() : this("0", "0", "0","0","","0")
 }

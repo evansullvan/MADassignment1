@@ -1,14 +1,15 @@
 package com.wit.assignment1.Fragments
 
-
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Spinner
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.google.firebase.auth.FirebaseAuth
@@ -18,7 +19,6 @@ import com.wit.assignment1.Activities.MainActivity
 import com.wit.assignment1.Model.House
 import com.wit.assignment1.R
 
-
 class AddHouseDetailsFragment : Fragment() {
 
     private lateinit var price: EditText
@@ -26,24 +26,24 @@ class AddHouseDetailsFragment : Fragment() {
     private lateinit var sqft: EditText
     private lateinit var address: Button
     private lateinit var post: Button
-    private val mAuth: FirebaseAuth? = null
-    private val mDatabase: DatabaseReference? = null
+    private lateinit var spinnerHouseType: Spinner
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?): View? {
-
-        val view: View = inflater.inflate(com.wit.assignment1.R.layout.fragment_add_house_details, container, false)
+        savedInstanceState: Bundle?
+    ): View? {
+        val view: View =
+            inflater.inflate(R.layout.fragment_add_house_details, container, false)
 
         price = view.findViewById(R.id.price)
         roomamount = view.findViewById(R.id.roomamount)
         sqft = view.findViewById(R.id.housesize)
         address = view.findViewById(R.id.address)
         post = view.findViewById(R.id.postbtn)
+        spinnerHouseType = view.findViewById(R.id.houseTypeSpinner)
 
         val postf = arguments?.getSerializable("post") as? House
         if (post != null) {
-
             if (postf != null) {
                 price.setText(postf.price.toString())
             }
@@ -55,10 +55,20 @@ class AddHouseDetailsFragment : Fragment() {
             }
         }
 
+
+        spinnerHouseType.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+
+                val selectedHouseType: String = parent?.getItemAtPosition(position).toString()
+
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+
+            }
+        }
+
         post.setOnClickListener { upload() }
-
-
-
 
         return view
     }
@@ -91,14 +101,17 @@ class AddHouseDetailsFragment : Fragment() {
             return
         }
 
+
+        val selectedHouseType: String = spinnerHouseType.selectedItem.toString()
+
         val ref = FirebaseDatabase.getInstance().getReference("Posts")
 
-        // Check if updating an existing post
+
         val post: House? = arguments?.getSerializable("post") as? House
         if (post != null) {
-            updatePost(ref, post, houseprice, houserooms, housesize)
+            updatePost(ref, post, houseprice, houserooms, housesize, selectedHouseType)
         } else {
-            createNewPost(ref, houseprice, houserooms, housesize, timeInMillis)
+            createNewPost(ref, houseprice, houserooms, housesize, timeInMillis, selectedHouseType)
         }
     }
 
@@ -107,12 +120,14 @@ class AddHouseDetailsFragment : Fragment() {
         post: House,
         houseprice: String,
         houserooms: String,
-        housesize: String
+        housesize: String,
+        selectedHouseType: String
     ) {
         val map = HashMap<String, Any?>()
         map["price"] = houseprice
         map["roomamount"] = houserooms
         map["houseSize"] = housesize
+        map["houseType"] = selectedHouseType
         map["timestamp"] = System.currentTimeMillis()
 
         ref.child(post.postId).updateChildren(map)
@@ -130,7 +145,8 @@ class AddHouseDetailsFragment : Fragment() {
         houseprice: String,
         houserooms: String,
         housesize: String,
-        timeInMillis: Long
+        timeInMillis: Long,
+        selectedHouseType: String
     ) {
         val postId = ref.push().key
         val map = HashMap<String, Any?>()
@@ -138,6 +154,7 @@ class AddHouseDetailsFragment : Fragment() {
         map["price"] = houseprice
         map["roomamount"] = houserooms
         map["houseSize"] = housesize
+        map["houseType"] = selectedHouseType
         map["publisher"] = FirebaseAuth.getInstance().currentUser!!.uid
         map["timestamp"] = timeInMillis
 
@@ -154,7 +171,4 @@ class AddHouseDetailsFragment : Fragment() {
             Toast.makeText(requireContext(), "Error making post. Try again.", Toast.LENGTH_SHORT).show()
         }
     }
-
-
-
 }
