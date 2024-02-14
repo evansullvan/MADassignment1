@@ -28,6 +28,8 @@
         android:layout_height="wrap_content"
         android:id="@+id/price"
         android:hint="Price..."
+        android:imeOptions="actionNext"
+        android:inputType="number"
         android:elevation="3dp"
         android:layout_marginBottom="10dp"
         android:padding="10dp"
@@ -38,6 +40,8 @@
         android:layout_height="wrap_content"
         android:id="@+id/roomamount"
         android:elevation="3dp"
+        android:imeOptions="actionNext"
+        android:inputType="number"
         android:hint="Amount of rooms..."
         android:layout_marginBottom="10dp"
         android:padding="10dp"
@@ -48,6 +52,8 @@
         android:id="@+id/housesize"
         android:elevation="3dp"
         android:hint="Sqft..."
+        android:inputType="number"
+        android:imeOptions="actionNext"
         android:padding="10dp"
         android:layout_marginBottom="10dp"
         android:background="@drawable/edit_text_background"/>
@@ -58,6 +64,7 @@
     android:padding="10dp"
     android:layout_marginBottom="10dp"
     android:elevation="3dp"
+
     android:id="@+id/houseTypeSpinner"
     android:entries="@array/house_types"/>
     <Button
@@ -77,6 +84,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/edit_text_background"
         android:text="Post"
+        android:textSize="15sp"
         android:textAlignment="center"
         android:padding="15dp"
         android:elevation="3dp"

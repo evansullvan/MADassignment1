@@ -41,6 +41,8 @@
         android:layout_height="wrap_content"
         android:background="@drawable/edit_text_background"
         android:hint="Email..."
+        android:imeOptions="actionNext"
+        android:inputType="textEmailAddress"
         android:padding="15dp"
         android:layout_marginBottom="20dp"
         app:layout_constraintBottom_toTopOf="@+id/userPassword"
@@ -56,6 +58,7 @@
         android:hint="Password..."
         android:inputType="textPassword"
         android:padding="15dp"
+        android:imeOptions="actionNext"
         app:layout_constraintBottom_toTopOf="@+id/LoginBtn"
         tools:layout_editor_absoluteX="15dp" />
 

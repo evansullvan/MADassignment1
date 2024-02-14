@@ -75,31 +75,45 @@ class AddHouseDetailsFragment : Fragment() {
     }
 
     private fun upload() {
-        var houseprice: String = price.text.toString().trim()
+        var houseprice: Double = price.text.toString().toDouble()
         var housesize: String = sqft.text.toString().trim()
         var houserooms: String = roomamount.text.toString().trim()
 
         val timeInMillis = System.currentTimeMillis()
 
-        houseprice = houseprice.trim()
-        houserooms = houserooms.trim()
-        housesize = housesize.trim()
+        if (houseprice.isNaN()) {
+            price.error = "Price cannot be empty"
+            return
 
-        houseprice = houseprice.replace("\\s+".toRegex(), " ")
-        houserooms = houserooms.replace("\\s+".toRegex(), " ")
-        housesize = housesize.replace("\\s+".toRegex(), " ")
-
-        if (houseprice.isEmpty()) {
-            price.error = "empty"
+        }
+        if (housesize .isEmpty()) {
+            sqft.error = "House size cannot be empty"
             return
         }
         if (houserooms.isEmpty()) {
-            roomamount.error = "empty"
+            roomamount.error = "Room amount cannot be empty"
             return
+        }
+
+        houseprice = houseprice
+        houserooms = houserooms.trim()
+        housesize = housesize.trim()
+
+        houseprice = houseprice
+        houserooms = houserooms.replace("\\s+".toRegex(), " ")
+        housesize = housesize.replace("\\s+".toRegex(), " ")
+
+        if (houseprice == null) {
+            price.error = "empty"
+
+        }
+        if (houserooms.isEmpty()) {
+            roomamount.error = "empty"
+
         }
         if (housesize.isEmpty()) {
             sqft.error = "empty"
-            return
+
         }
 
 
@@ -119,7 +133,7 @@ class AddHouseDetailsFragment : Fragment() {
     private fun updatePost(
         ref: DatabaseReference,
         post: House,
-        houseprice: String,
+        houseprice: Double,
         houserooms: String,
         housesize: String,
         selectedHouseType: String
@@ -143,7 +157,7 @@ class AddHouseDetailsFragment : Fragment() {
 
     private fun createNewPost(
         ref: DatabaseReference,
-        houseprice: String,
+        houseprice: Double,
         houserooms: String,
         housesize: String,
         timeInMillis: Long,
