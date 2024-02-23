@@ -1,6 +1,7 @@
 package com.wit.assignment1.Fragments
 
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -12,11 +13,18 @@ import android.widget.EditText
 import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import androidx.core.location.LocationManagerCompat.requestLocationUpdates
 import androidx.fragment.app.Fragment
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.wit.assignment1.Activities.MainActivity
+import android.Manifest
+
 import com.wit.assignment1.Model.House
 import com.wit.assignment1.R
 
@@ -28,6 +36,9 @@ class AddHouseDetailsFragment : Fragment() {
     private lateinit var address: Button
     private lateinit var post: TextView
     private lateinit var spinnerHouseType: Spinner
+
+
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -57,6 +68,9 @@ class AddHouseDetailsFragment : Fragment() {
         }
 
 
+
+
+
         spinnerHouseType.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
 
@@ -71,13 +85,20 @@ class AddHouseDetailsFragment : Fragment() {
 
         post.setOnClickListener { upload() }
 
+
         return view
     }
 
+
+
+
+
+
+
     private fun upload() {
         var houseprice: Double = price.text.toString().toDouble()
-        var housesize: String = sqft.text.toString().trim()
-        var houserooms: String = roomamount.text.toString().trim()
+        var housesize: Double = sqft.text.toString().toDouble()
+        var houserooms: Int = roomamount.text.toString().toInt()
 
         val timeInMillis = System.currentTimeMillis()
 
@@ -86,32 +107,32 @@ class AddHouseDetailsFragment : Fragment() {
             return
 
         }
-        if (housesize .isEmpty()) {
+        if (housesize.isNaN()) {
             sqft.error = "House size cannot be empty"
             return
         }
-        if (houserooms.isEmpty()) {
+        if (houserooms == null) {
             roomamount.error = "Room amount cannot be empty"
             return
         }
 
         houseprice = houseprice
-        houserooms = houserooms.trim()
-        housesize = housesize.trim()
+        houserooms = houserooms
+        housesize = housesize
 
         houseprice = houseprice
-        houserooms = houserooms.replace("\\s+".toRegex(), " ")
-        housesize = housesize.replace("\\s+".toRegex(), " ")
+        houserooms = houserooms
+        housesize = housesize
 
         if (houseprice == null) {
             price.error = "empty"
 
         }
-        if (houserooms.isEmpty()) {
+        if (houserooms == null) {
             roomamount.error = "empty"
 
         }
-        if (housesize.isEmpty()) {
+        if (housesize == null) {
             sqft.error = "empty"
 
         }
@@ -134,8 +155,8 @@ class AddHouseDetailsFragment : Fragment() {
         ref: DatabaseReference,
         post: House,
         houseprice: Double,
-        houserooms: String,
-        housesize: String,
+        houserooms: Int,
+        housesize: Double,
         selectedHouseType: String
     ) {
         val map = HashMap<String, Any?>()
@@ -158,10 +179,11 @@ class AddHouseDetailsFragment : Fragment() {
     private fun createNewPost(
         ref: DatabaseReference,
         houseprice: Double,
-        houserooms: String,
-        housesize: String,
+        houserooms: Int,
+        housesize: Double,
         timeInMillis: Long,
-        selectedHouseType: String
+        selectedHouseType: String,
+
     ) {
         val postId = ref.push().key
         val map = HashMap<String, Any?>()
@@ -172,6 +194,7 @@ class AddHouseDetailsFragment : Fragment() {
         map["houseType"] = selectedHouseType
         map["publisher"] = FirebaseAuth.getInstance().currentUser!!.uid
         map["timestamp"] = timeInMillis
+
 
         if (postId != null) {
             ref.child(postId).setValue(map)
