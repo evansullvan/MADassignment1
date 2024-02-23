@@ -75,7 +75,7 @@
         android:layout_marginBottom="10dp"
         android:backgroundTint="@color/white"
         android:id="@+id/address"
-        android:visibility="invisible"
+
         />
 
 
