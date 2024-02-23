@@ -19,6 +19,7 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.wit.assignment1.Model.House
 import com.wit.assignment1.R
+import java.text.DecimalFormat
 
 
 class ListHouseFragment : Fragment(), HouseItemClickListener {
@@ -80,6 +81,9 @@ class ListHouseFragment : Fragment(), HouseItemClickListener {
                         val post: House? = snapshot.getValue(House::class.java)
                         if (post != null) {
                             if (post.publisher.equals(FirebaseAuth.getInstance().currentUser?.uid)) {
+
+
+
                                 postList!!.add(post!!)
                             }
                         }
@@ -93,6 +97,8 @@ class ListHouseFragment : Fragment(), HouseItemClickListener {
             })
 
     }
+
+
 
 }
 
@@ -123,7 +129,7 @@ class HouseAdapter(mContext: Context, mPosts: List<House>,  private val itemClic
         val activity = mContext as FragmentActivity
         val fragment = activity.supportFragmentManager.findFragmentById(R.id.fragment_container)
 
-        holder.Price.text = "Price: "+post.price.toString()
+        holder.Price.text = "Price: $" + post.getFormattedPrice()
         holder.roomamount.text = "Room amount: "+post.roomamount.toString()
         holder.houseSize.text ="House size: "+ post.houseSize
 
