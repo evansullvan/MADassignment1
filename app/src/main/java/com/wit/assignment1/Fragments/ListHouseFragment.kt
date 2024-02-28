@@ -92,7 +92,7 @@ class ListHouseFragment : Fragment(), HouseItemClickListener {
                 }
 
                 override fun onCancelled(databaseError: DatabaseError) {
-                    // Handle the error if needed
+
                 }
             })
 
@@ -129,9 +129,10 @@ class HouseAdapter(mContext: Context, mPosts: List<House>,  private val itemClic
         val activity = mContext as FragmentActivity
         val fragment = activity.supportFragmentManager.findFragmentById(R.id.fragment_container)
 
-        holder.Price.text = "Price: $" + post.getFormattedPrice()
+        holder.Price.text = "Price: €" + post.getFormattedPrice()
         holder.roomamount.text = "Room amount: "+post.roomamount.toString()
         holder.houseSize.text ="House size: "+ post.houseSize
+        holder.houseType.text = "Property type: "+ post.houseType.toString()
 
         holder.itemView.setOnLongClickListener {
             showPopupMenu(holder.itemView, post)
@@ -170,12 +171,14 @@ class HouseAdapter(mContext: Context, mPosts: List<House>,  private val itemClic
         var Price: TextView
         var roomamount: TextView
         var houseSize: TextView
+        var houseType: TextView
 
         init {
             //imageProfile = itemView.findViewById<ImageView>(R.id.image_profile)
          Price = itemView.findViewById(R.id.housePrice);
             roomamount = itemView.findViewById(R.id.houseroomamount);
             houseSize = itemView.findViewById(R.id.housesize);
+            houseType = itemView.findViewById(R.id.housetype)
         }
     }
 }

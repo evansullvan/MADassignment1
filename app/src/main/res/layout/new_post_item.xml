@@ -28,7 +28,7 @@ android:padding="10dp"
             android:maxHeight="200dp"
             android:adjustViewBounds="true"
             android:scaleType="fitXY"
-            android:src="@drawable/ic_launcher_background"
+            android:src="@drawable/house_placeholder"
             app:cardCornerRadius="10dp" />
 
     </androidx.cardview.widget.CardView>
@@ -83,12 +83,22 @@ android:padding="10dp"
         </LinearLayout>
 
         <TextView
+            android:id="@+id/housetype"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/linearl"
+            android:textColor="@color/black"
+            android:layout_marginTop="5dp"
+            tools:text="Type" />
+
+        <TextView
             android:id="@+id/houseAddress"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Address"
             android:layout_marginTop="5dp"
-            android:layout_below="@+id/linearl"/>
+            android:visibility="invisible"
+            android:layout_below="@+id/housetype"/>
 
     </RelativeLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
