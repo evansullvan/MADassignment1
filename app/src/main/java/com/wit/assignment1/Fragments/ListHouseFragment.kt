@@ -22,7 +22,7 @@ import com.wit.assignment1.R
 import java.text.DecimalFormat
 
 
-class ListHouseFragment : Fragment(), HouseItemClickListener {
+class ListHouseFragment : Fragment()  {
 
     private lateinit var recyclerViewPosts: RecyclerView
 
@@ -43,34 +43,14 @@ class ListHouseFragment : Fragment(), HouseItemClickListener {
         recyclerViewPosts.layoutManager = linearLayoutManager
 
         postList = ArrayList<House>()
-        postAdapter = context?.let { HouseAdapter(it, postList as ArrayList<House>, this) }
+        postAdapter = context?.let { HouseAdapter(it, postList as ArrayList<House>) }
         recyclerViewPosts.adapter = postAdapter
 
         readPosts()
 
         return view
     }
-    override fun onDeleteClick(post: House) {
-        // Handle delete action
-        val postReference = FirebaseDatabase.getInstance().reference.child("Posts").child(post.postId)
-        postReference.removeValue()
-    }
 
-    override fun onUpdateClick(post: House) {
-        // Handle update action
-        val addPostFragment = AddHouseDetailsFragment()
-
-        // Pass the post details to the fragment
-        val bundle = Bundle()
-        bundle.putSerializable("post", post)
-        addPostFragment.arguments = bundle
-
-        // Navigate to the AddPostFragment
-        val transaction = requireActivity().supportFragmentManager.beginTransaction()
-        transaction.replace(R.id.fragment_container, addPostFragment)
-        transaction.addToBackStack(null)
-        transaction.commit()
-    }
 
     private fun readPosts() {
         FirebaseDatabase.getInstance().reference.child("Posts")
@@ -80,12 +60,12 @@ class ListHouseFragment : Fragment(), HouseItemClickListener {
                     for (snapshot in dataSnapshot.children) {
                         val post: House? = snapshot.getValue(House::class.java)
                         if (post != null) {
-                            if (post.publisher.equals(FirebaseAuth.getInstance().currentUser?.uid)) {
+
 
 
 
                                 postList!!.add(post!!)
-                            }
+
                         }
                     }
                     postAdapter?.notifyDataSetChanged()
@@ -102,83 +82,4 @@ class ListHouseFragment : Fragment(), HouseItemClickListener {
 
 }
 
-interface HouseItemClickListener {
-    fun onDeleteClick(post: House)
-    fun onUpdateClick(post: House)
-}
-class HouseAdapter(mContext: Context, mPosts: List<House>,  private val itemClickListener: HouseItemClickListener) : RecyclerView.Adapter<HouseAdapter.Viewholder>() {
 
-    private val mContext: Context = mContext
-    private val mPosts: List<House> = mPosts
-
-
-
-
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Viewholder {
-        val activity = mContext as FragmentActivity
-        val fragment = activity.supportFragmentManager.findFragmentById(R.id.fragment_container)
-        val view: View = LayoutInflater.from(mContext).inflate(R.layout.new_post_item, parent, false)
-        return HouseAdapter.Viewholder(view)
-    }
-
-
-
-    override fun onBindViewHolder(holder: Viewholder, position: Int) {
-        val post: House = mPosts!![position]
-        val activity = mContext as FragmentActivity
-        val fragment = activity.supportFragmentManager.findFragmentById(R.id.fragment_container)
-
-        holder.Price.text = "Price: €" + post.getFormattedPrice()
-        holder.roomamount.text = "Room amount: "+post.roomamount.toString()
-        holder.houseSize.text ="House size: "+ post.houseSize
-        holder.houseType.text = "Property type: "+ post.houseType.toString()
-
-        holder.itemView.setOnLongClickListener {
-            showPopupMenu(holder.itemView, post)
-            true
-        }
-
-
-
-    }
-
-    override fun getItemCount(): Int = mPosts.size
-    private fun showPopupMenu(view: View, post: House) {
-        val popupMenu = PopupMenu(mContext, view)
-        popupMenu.menuInflater.inflate(R.menu.post_options_menu, popupMenu.menu)
-
-        popupMenu.setOnMenuItemClickListener { menuItem ->
-            when (menuItem.itemId) {
-                R.id.menu_update -> {
-                    itemClickListener.onUpdateClick(post)
-                    true
-                }
-                R.id.menu_delete -> {
-                    itemClickListener.onDeleteClick(post)
-                    true
-                }
-                else -> false
-            }
-        }
-
-        popupMenu.show()
-    }
-
-
-    class Viewholder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        lateinit var imageProfile: ImageView
-        var Price: TextView
-        var roomamount: TextView
-        var houseSize: TextView
-        var houseType: TextView
-
-        init {
-            //imageProfile = itemView.findViewById<ImageView>(R.id.image_profile)
-         Price = itemView.findViewById(R.id.housePrice);
-            roomamount = itemView.findViewById(R.id.houseroomamount);
-            houseSize = itemView.findViewById(R.id.housesize);
-            houseType = itemView.findViewById(R.id.housetype)
-        }
-    }
-}
