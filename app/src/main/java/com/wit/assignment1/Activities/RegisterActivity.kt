@@ -42,11 +42,11 @@ class RegisterActivity : AppCompatActivity() {
 
         btntoLogin.setOnClickListener {
 
-                startActivity(
-                    Intent(this@RegisterActivity, LoginActivity::class.java).addFlags(
-                        Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
-                    )
+            startActivity(
+                Intent(this@RegisterActivity, LoginActivity::class.java).addFlags(
+                    Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
                 )
+            )
 
         }
 

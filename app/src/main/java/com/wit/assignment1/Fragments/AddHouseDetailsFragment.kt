@@ -184,7 +184,7 @@ class AddHouseDetailsFragment : Fragment() {
         timeInMillis: Long,
         selectedHouseType: String,
 
-    ) {
+        ) {
         val postId = ref.push().key
         val map = HashMap<String, Any?>()
         map["postId"] = postId

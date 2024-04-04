@@ -46,11 +46,11 @@ class LoginActivity : AppCompatActivity() {
 
         btntoRegister.setOnClickListener {
 
-                startActivity(
-                    Intent(this@LoginActivity, RegisterActivity::class.java).addFlags(
-                        Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
-                    )
+            startActivity(
+                Intent(this@LoginActivity, RegisterActivity::class.java).addFlags(
+                    Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
                 )
+            )
 
         }
 
@@ -69,16 +69,16 @@ class LoginActivity : AppCompatActivity() {
                 userpass.error = "Password is required"
                 return@setOnClickListener
             }
-                mAuth!!.signInWithEmailAndPassword(txtEmail, txtPassword).addOnSuccessListener {
+            mAuth!!.signInWithEmailAndPassword(txtEmail, txtPassword).addOnSuccessListener {
 
-                    val intent = Intent(this@LoginActivity, MainActivity::class.java)
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                    startActivity(intent)
-                    finish()
-                }.addOnFailureListener { e ->
+                val intent = Intent(this@LoginActivity, MainActivity::class.java)
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                startActivity(intent)
+                finish()
+            }.addOnFailureListener { e ->
 
-                    Toast.makeText(this@LoginActivity, e.message, Toast.LENGTH_SHORT).show()
-                }
+                Toast.makeText(this@LoginActivity, e.message, Toast.LENGTH_SHORT).show()
+            }
 
         }
     }

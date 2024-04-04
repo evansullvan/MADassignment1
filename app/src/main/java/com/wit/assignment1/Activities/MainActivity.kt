@@ -23,6 +23,7 @@ import com.google.firebase.database.FirebaseDatabase
 
 import com.wit.assignment1.Fragments.AddHouseDetailsFragment
 import com.wit.assignment1.Fragments.ListHouseFragment
+import com.wit.assignment1.Fragments.ProfileFragment
 import com.wit.assignment1.R
 
 import java.util.Stack
@@ -36,6 +37,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var selectedFragment: Fragment
     private val NAV_HOME: Int = com.wit.assignment1.R.id.nav_home
     private val NAV_ADD: Int = com.wit.assignment1.R.id.nav_add
+    private val NAV_PROFILE: Int = R.id.nav_profile
 
     private lateinit var logout: TextView
 
@@ -65,7 +67,7 @@ class MainActivity : AppCompatActivity() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             val decor: View = window.decorView
             decor.setSystemUiVisibility(0)
-            window.statusBarColor = ContextCompat.getColor(this, com.wit.assignment1.R.color.black)
+            window.statusBarColor = ContextCompat.getColor(this, com.wit.assignment1.R.color.blue)
         }
         if (currentUser == null) {
             // User is not signed in
@@ -81,6 +83,7 @@ class MainActivity : AppCompatActivity() {
                 val selectedFragment: Fragment? = when (itemId) {
                     NAV_HOME -> ListHouseFragment()
                     NAV_ADD -> AddHouseDetailsFragment()
+                    NAV_PROFILE -> ProfileFragment()
                     else -> null
                 }
 

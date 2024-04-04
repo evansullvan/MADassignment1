@@ -29,9 +29,9 @@ class SplashActivity : AppCompatActivity() {
 
 
         // how to use gif in slasph screen tutorial by https://www.youtube.com/watch?v=IpNLx75b0hE
-       val source: ImageDecoder.Source = ImageDecoder.createSource(
-           resources, R.drawable.onlygafs
-       )
+        val source: ImageDecoder.Source = ImageDecoder.createSource(
+            resources, R.drawable.onlygafs
+        )
         val drawable:Drawable = ImageDecoder.decodeDrawable(source)
 
         val gifView:ImageView = findViewById(R.id.splashscreengif)
