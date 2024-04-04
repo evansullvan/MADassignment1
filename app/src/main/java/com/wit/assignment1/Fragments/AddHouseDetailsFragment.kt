@@ -24,6 +24,9 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.wit.assignment1.Activities.MainActivity
 import android.Manifest
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
+import com.wit.assignment1.Activities.MapActivity
 
 import com.wit.assignment1.Model.House
 import com.wit.assignment1.R
@@ -33,9 +36,12 @@ class AddHouseDetailsFragment : Fragment() {
     private lateinit var price: EditText
     private lateinit var roomamount: EditText
     private lateinit var sqft: EditText
-    private lateinit var address: Button
+    private lateinit var address: TextView
     private lateinit var post: TextView
     private lateinit var spinnerHouseType: Spinner
+    private lateinit var mapIntentLauncher : ActivityResultLauncher<Intent>
+
+
 
 
 
@@ -67,6 +73,11 @@ class AddHouseDetailsFragment : Fragment() {
             }
         }
 
+        address.setOnClickListener{
+            val launcherIntent = Intent(requireContext(), MapActivity::class.java)
+            mapIntentLauncher.launch(launcherIntent)
+        }
+
 
 
 
@@ -85,7 +96,7 @@ class AddHouseDetailsFragment : Fragment() {
 
         post.setOnClickListener { upload() }
 
-
+        registerMapCallback()
         return view
     }
 
@@ -93,7 +104,12 @@ class AddHouseDetailsFragment : Fragment() {
 
 
 
+    private fun registerMapCallback() {
+        mapIntentLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
 
+            }
+    }
 
     private fun upload() {
         var houseprice: Double = price.text.toString().toDouble()
