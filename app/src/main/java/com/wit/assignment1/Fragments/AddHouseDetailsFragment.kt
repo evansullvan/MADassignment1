@@ -24,11 +24,14 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.wit.assignment1.Activities.MainActivity
 import android.Manifest
+import android.app.Activity.RESULT_CANCELED
+import android.app.Activity.RESULT_OK
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import com.wit.assignment1.Activities.MapActivity
 
 import com.wit.assignment1.Model.House
+import com.wit.assignment1.Model.Location
 import com.wit.assignment1.R
 
 class AddHouseDetailsFragment : Fragment() {
@@ -40,7 +43,7 @@ class AddHouseDetailsFragment : Fragment() {
     private lateinit var post: TextView
     private lateinit var spinnerHouseType: Spinner
     private lateinit var mapIntentLauncher : ActivityResultLauncher<Intent>
-
+    var location = Location(52.245696, -7.139102, 15f)
 
 
 
@@ -75,6 +78,7 @@ class AddHouseDetailsFragment : Fragment() {
 
         address.setOnClickListener{
             val launcherIntent = Intent(requireContext(), MapActivity::class.java)
+                .putExtra("location", location)
             mapIntentLauncher.launch(launcherIntent)
         }
 
@@ -106,8 +110,18 @@ class AddHouseDetailsFragment : Fragment() {
 
     private fun registerMapCallback() {
         mapIntentLauncher =
-            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult())
+            { result ->
+                when (result.resultCode) {
+                    RESULT_OK -> {
+                        if (result.data != null) {
 
+                            location = result.data!!.extras?.getParcelable("location")!!
+
+                        } // end of if
+                    }
+                    RESULT_CANCELED -> { } else -> { }
+                }
             }
     }
 
@@ -181,6 +195,8 @@ class AddHouseDetailsFragment : Fragment() {
         map["houseSize"] = housesize
         map["houseType"] = selectedHouseType
         map["timestamp"] = System.currentTimeMillis()
+        map["lat"] = location.lat
+        map["lng"] = location.lng
 
         ref.child(post.postId).updateChildren(map)
             .addOnSuccessListener {
@@ -210,7 +226,8 @@ class AddHouseDetailsFragment : Fragment() {
         map["houseType"] = selectedHouseType
         map["publisher"] = FirebaseAuth.getInstance().currentUser!!.uid
         map["timestamp"] = timeInMillis
-
+        map["lat"] = location.lat
+        map["lng"] = location.lng
 
         if (postId != null) {
             ref.child(postId).setValue(map)
