@@ -1,5 +1,6 @@
 package com.wit.assignment1.Model
 
+import android.net.Uri
 import android.os.Parcel
 import android.os.Parcelable
 import java.io.Serializable
@@ -16,7 +17,8 @@ data class House(
     val postId: String,
     var lat: Double = 0.0,
     var lng: Double = 0.0,
-    var zoom: Float = 0f
+    var zoom: Float = 0f,
+    var image: String = ""
 ):Serializable {
 
     constructor() : this(0.0, 0, 0.0,"0","","0")

@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Fragments.AddHouseDetailsFragmentView">
+    tools:context=".Fragments.AddHouseDetailsFragment">
 
 <LinearLayout
     android:layout_width="match_parent"
@@ -83,6 +83,27 @@
         android:backgroundTint="@color/white"
         android:id="@+id/address"
         />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/edit_text_background"
+        android:text="Choose image"
+        android:textSize="15sp"
+        android:textAlignment="center"
+        android:padding="15dp"
+        android:layout_marginBottom="10dp"
+        android:elevation="3dp"
+        android:textStyle="bold"
+        android:textColor="@color/blue"
+        android:backgroundTint="@color/white"
+        android:id="@+id/images"
+        />
+
+    <ImageView
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_gravity="center"
+        android:id="@+id/houseimageview"/>
 
     <TextView
         android:layout_width="match_parent"
