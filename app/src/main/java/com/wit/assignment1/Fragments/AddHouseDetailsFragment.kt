@@ -298,7 +298,8 @@ class AddHouseDetailsFragment : Fragment() {
                 if (postId != null) {
                     ref.child(postId).setValue(map)
                         .addOnSuccessListener {
-                            startActivity(Intent(requireContext(), MainActivity::class.java))
+                            val context = context
+                            startActivity(Intent(context, MainActivity::class.java))
                             activity?.finish()
                         }
                         .addOnFailureListener {

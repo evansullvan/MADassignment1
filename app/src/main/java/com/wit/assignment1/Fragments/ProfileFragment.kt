@@ -1,6 +1,8 @@
 package com.wit.assignment1.Fragments
 
 import android.content.Context
+import android.location.Address
+import android.location.Geocoder
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -17,9 +19,14 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.squareup.picasso.Picasso
 import com.wit.assignment1.Model.House
+import com.wit.assignment1.Model.Location
 
 import com.wit.assignment1.R
+import com.wit.assignment1.adapters.HouseAdapter
+import java.io.IOException
+import java.util.Locale
 
 class ProfileFragment : Fragment(),HouseItemClickListener {
     private lateinit var recyclerViewPosts: RecyclerView
@@ -111,81 +118,3 @@ interface HouseItemClickListener {
 }
 
 
-class HouseAdapter(mContext: Context,
-                   mPosts: List<House>,
-                   private val itemClickListener: HouseItemClickListener? = null) : RecyclerView.Adapter<HouseAdapter.Viewholder>() {
-
-    private val mContext: Context = mContext
-    private val mPosts: List<House> = mPosts
-
-
-
-
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Viewholder {
-        val activity = mContext as FragmentActivity
-        val fragment = activity.supportFragmentManager.findFragmentById(R.id.fragment_container)
-        val view: View = LayoutInflater.from(mContext).inflate(R.layout.new_post_item, parent, false)
-        return HouseAdapter.Viewholder(view)
-    }
-
-
-
-    override fun onBindViewHolder(holder: Viewholder, position: Int) {
-        val post: House = mPosts!![position]
-        val activity = mContext as FragmentActivity
-        val fragment = activity.supportFragmentManager.findFragmentById(R.id.fragment_container)
-
-        holder.Price.text = "Price: €" + post.getFormattedPrice()
-        holder.roomamount.text = "Room amount: "+post.roomamount.toString()
-        holder.houseSize.text ="House size: "+ post.houseSize
-        holder.houseType.text = "Property type: "+ post.houseType.toString()
-
-        holder.itemView.setOnLongClickListener {
-            showPopupMenu(holder.itemView, post)
-            true
-        }
-
-
-
-    }
-
-    override fun getItemCount(): Int = mPosts.size
-    private fun showPopupMenu(view: View, post: House) {
-        val popupMenu = PopupMenu(mContext, view)
-        popupMenu.menuInflater.inflate(R.menu.post_options_menu, popupMenu.menu)
-
-        popupMenu.setOnMenuItemClickListener { menuItem ->
-            when (menuItem.itemId) {
-                R.id.menu_update -> {
-                    itemClickListener?.onUpdateClick(post)
-                    true
-                }
-                R.id.menu_delete -> {
-                    itemClickListener?.onDeleteClick(post)
-                    true
-                }
-                else -> false
-            }
-        }
-
-        popupMenu.show()
-    }
-
-
-    class Viewholder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        lateinit var imageProfile: ImageView
-        var Price: TextView
-        var roomamount: TextView
-        var houseSize: TextView
-        var houseType: TextView
-
-        init {
-            //imageProfile = itemView.findViewById<ImageView>(R.id.image_profile)
-            Price = itemView.findViewById(R.id.housePrice);
-            roomamount = itemView.findViewById(R.id.houseroomamount);
-            houseSize = itemView.findViewById(R.id.housesize);
-            houseType = itemView.findViewById(R.id.housetype)
-        }
-    }
-}
