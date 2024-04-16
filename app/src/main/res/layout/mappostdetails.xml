@@ -34,13 +34,21 @@
 
 
 
+<androidx.cardview.widget.CardView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="12dp"
+    android:layout_marginTop="20dp"
+    android:layout_marginBottom="30dp">
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:maxHeight="400dp"
+android:adjustViewBounds="true"
+        android:id="@+id/currentImage"
+       />
+</androidx.cardview.widget.CardView>
 
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:layout_marginTop="15dp"
-            android:id="@+id/currentImage"
-            android:layout_marginBottom="30dp"/>
 
         <TextView
             android:layout_width="match_parent"
