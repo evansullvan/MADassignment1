@@ -25,9 +25,9 @@ android:padding="10dp"
             android:id="@+id/imageView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:maxHeight="200dp"
+            android:maxHeight="300dp"
             android:adjustViewBounds="true"
-            android:scaleType="fitXY"
+            android:scaleType="centerCrop"
             android:src="@drawable/house_placeholder"
             app:cardCornerRadius="10dp" />
 
@@ -97,7 +97,8 @@ android:padding="10dp"
             android:layout_height="wrap_content"
             android:text="Address"
             android:layout_marginTop="5dp"
-            android:visibility="invisible"
+            android:visibility="visible"
+            android:textColor="@color/mediumdarkGrey"
             android:layout_below="@+id/housetype"/>
 
     </RelativeLayout>

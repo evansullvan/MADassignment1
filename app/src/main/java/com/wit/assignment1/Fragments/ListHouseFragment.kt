@@ -24,6 +24,7 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.wit.assignment1.Model.House
 import com.wit.assignment1.R
+import com.wit.assignment1.adapters.HouseAdapter
 import java.text.DecimalFormat
 
 

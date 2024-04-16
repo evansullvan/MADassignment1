@@ -10,6 +10,7 @@ import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.ActionBar
 
 import androidx.appcompat.app.AppCompatActivity
@@ -40,6 +41,7 @@ class MainActivity : AppCompatActivity() {
     private val NAV_PROFILE: Int = R.id.nav_profile
 
     private lateinit var logout: TextView
+    private lateinit var mapviewbtn: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,6 +53,7 @@ class MainActivity : AppCompatActivity() {
 
 
         logout = findViewById(R.id.logout)
+        mapviewbtn = findViewById(R.id.mapview)
         val mAuth = FirebaseAuth.getInstance()
         val currentUser = mAuth.currentUser
         val fragment: Fragment = AddHouseDetailsFragment() // Replace with your actual fragment
@@ -109,6 +112,18 @@ class MainActivity : AppCompatActivity() {
                 startActivity(intent)
                 finish()
             }
+
+            mapviewbtn.setOnClickListener{
+                val launcherIntent = Intent(this, PlacemarkMapsActivity::class.java)
+                mapIntentLauncher.launch(launcherIntent)
+            }
         }
+
+
     }
+
+    private val mapIntentLauncher =
+        registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        )    { }
 }

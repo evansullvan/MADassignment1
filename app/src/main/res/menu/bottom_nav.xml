@@ -10,7 +10,7 @@
         android:title=""/>
 
     <item android:id="@+id/nav_profile"
-        android:icon="@drawable/plus"
+        android:icon="@drawable/profile"
         android:title=""/>
 
 
