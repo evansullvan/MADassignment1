@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activities.MainActivityView"
+    tools:context=".Activities.MainActivity"
     >
 
     <LinearLayout
@@ -19,7 +19,7 @@ android:elevation="10dp"
         android:layout_marginTop="0dp"
         android:layout_marginEnd="0dp"
         android:id="@+id/top"
-        android:orientation="vertical">
+        android:orientation="horizontal">
 
         <TextView
             android:layout_width="wrap_content"
@@ -27,6 +27,17 @@ android:elevation="10dp"
             android:padding="15dp"
             android:text="Logout"
             android:id="@+id/logout"
+            android:layout_marginStart="10dp"
+            android:textColor="@color/white"
+            android:textAlignment="textEnd"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="15dp"
+            android:text="Map"
+            android:id="@+id/mapview"
             android:layout_marginStart="10dp"
             android:textColor="@color/white"
             android:textAlignment="textEnd"
