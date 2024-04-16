@@ -1,18 +1,18 @@
 package com.wit.assignment1.Activities
 
-import android.content.Context
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.location.Address
 import android.location.Geocoder
 import android.os.Build
 import android.os.Bundle
-import com.google.android.material.snackbar.Snackbar
+import android.view.LayoutInflater
+import android.view.View
+import android.widget.ImageView
+import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.core.view.WindowCompat
-import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.navigateUp
-import androidx.navigation.ui.setupActionBarWithNavController
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
@@ -35,6 +35,12 @@ class PlacemarkMapsActivity : AppCompatActivity(),GoogleMap.OnMarkerClickListene
     private lateinit var binding: ActivityPlacemarkMapsBinding
     private lateinit var contentBinding: ContentPlacemarkMapsBinding
     lateinit var map: GoogleMap
+    private lateinit var cancelBTN:ImageView
+    private lateinit var addresspopup:TextView
+    private lateinit var pricepopup:TextView
+    private lateinit var roomspopup:TextView
+    private lateinit var sizepopup:TextView
+    private lateinit var imagepopup:ImageView
 
     private var postList: ArrayList<House>? = null
 
@@ -46,11 +52,11 @@ class PlacemarkMapsActivity : AppCompatActivity(),GoogleMap.OnMarkerClickListene
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             val decor = window.decorView
-            decor.systemUiVisibility = 0
-            window.statusBarColor = ContextCompat.getColor(this, R.color.blue)
+            decor.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+            window.statusBarColor = ContextCompat.getColor(this, R.color.white)
         }
 
-        
+
         postList = ArrayList<House>()
 readPosts()
         contentBinding = ContentPlacemarkMapsBinding.bind(binding.root)
@@ -75,29 +81,31 @@ readPosts()
 
     override fun onMarkerClick(marker: Marker): Boolean {
         val postId = marker.tag as? String // Assuming postId is stored as the tag of the marker
-        if (postId != null) {
-            // Retrieve the post data from Firebase using postId
-            FirebaseDatabase.getInstance().reference.child("Posts").child(postId)
-                .addListenerForSingleValueEvent(object : ValueEventListener {
-                    override fun onDataChange(dataSnapshot: DataSnapshot) {
-                        val postMap = dataSnapshot.value as? Map<String, Any>
-                        if (postMap != null) {
-                            contentBinding.currentaddress.text = getAddressFromLocation(postMap["lat"] as Double, postMap["lng"] as Double)
-                            contentBinding.currentprice.text = "£"+postMap["price"].toString()
-                            contentBinding.rooms.text = postMap["roomamount"].toString()+"Rooms"
-                            contentBinding.sqft.text = postMap["houseSize"].toString()+"sqft"
-                            val imageUrl = postMap["image"] as? String
-                            if (!imageUrl.isNullOrEmpty()) {
-                                Picasso.get().load(imageUrl).into(contentBinding.currentImage)
-                            }
-                        }
-                    }
 
-                    override fun onCancelled(databaseError: DatabaseError) {
-                        // Handle error if needed
-                    }
-                })
-        }
+        showPostdetailsDialog(postId)
+//        if (postId != null) {
+//            // Retrieve the post data from Firebase using postId
+//            FirebaseDatabase.getInstance().reference.child("Posts").child(postId)
+//                .addListenerForSingleValueEvent(object : ValueEventListener {
+//                    override fun onDataChange(dataSnapshot: DataSnapshot) {
+//                        val postMap = dataSnapshot.value as? Map<String, Any>
+//                        if (postMap != null) {
+//                            contentBinding.currentaddress.text = getAddressFromLocation(postMap["lat"] as Double, postMap["lng"] as Double)
+//                            contentBinding.currentprice.text = "£"+postMap["price"].toString()
+//                            contentBinding.rooms.text = postMap["roomamount"].toString()+"Rooms"
+//                            contentBinding.sqft.text = postMap["houseSize"].toString()+"sqft"
+//                            val imageUrl = postMap["image"] as? String
+//                            if (!imageUrl.isNullOrEmpty()) {
+//                                Picasso.get().load(imageUrl).into(contentBinding.currentImage)
+//                            }
+//                        }
+//                    }
+//
+//                    override fun onCancelled(databaseError: DatabaseError) {
+//                        // Handle error if needed
+//                    }
+//                })
+//        }
         return false
     }
 
@@ -169,4 +177,53 @@ readPosts()
         }
         return "no address";
     }
+
+    private fun showPostdetailsDialog(postId: String?) {
+        //https://stackoverflow.com/questions/42273188/problems-with-custom-layout-for-alertdialog
+        val alertDeleteDialog: View =
+            LayoutInflater.from(this@PlacemarkMapsActivity).inflate(R.layout.mappostdetails, null)
+        val builder = AlertDialog.Builder(this@PlacemarkMapsActivity)
+        builder.setView(alertDeleteDialog)
+
+        cancelBTN = alertDeleteDialog.findViewById(R.id.closebtn)
+        addresspopup = alertDeleteDialog.findViewById(R.id.currentaddress)
+        pricepopup = alertDeleteDialog.findViewById(R.id.currentprice)
+        roomspopup = alertDeleteDialog.findViewById(R.id.rooms)
+        sizepopup = alertDeleteDialog.findViewById(R.id.sqft)
+        imagepopup = alertDeleteDialog.findViewById(R.id.currentImage)
+        val dialog = builder.create()
+
+        //https://stackoverflow.com/questions/10795078/dialog-with-transparent-background-in-android
+        //make window behind popup transparent
+        dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.show()
+        cancelBTN.setOnClickListener(View.OnClickListener { dialog.cancel() })
+
+
+        if (postId != null) {
+            // Retrieve the post data from Firebase using postId
+            FirebaseDatabase.getInstance().reference.child("Posts").child(postId)
+                .addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onDataChange(dataSnapshot: DataSnapshot) {
+                        val postMap = dataSnapshot.value as? Map<String, Any>
+                        if (postMap != null) {
+                           addresspopup.text = getAddressFromLocation(postMap["lat"] as Double, postMap["lng"] as Double)
+                            pricepopup.text = "£"+postMap["price"].toString()
+                            roomspopup.text = postMap["roomamount"].toString()+" Rooms"
+                            sizepopup.text = postMap["houseSize"].toString()+" sqft"
+                            val imageUrl = postMap["image"] as? String
+                            if (!imageUrl.isNullOrEmpty()) {
+                                Picasso.get().load(imageUrl).into(imagepopup)
+                            }
+                        }
+                    }
+
+                    override fun onCancelled(databaseError: DatabaseError) {
+                        // Handle error if needed
+                    }
+                })
+        }
+
+    }
+
 }
