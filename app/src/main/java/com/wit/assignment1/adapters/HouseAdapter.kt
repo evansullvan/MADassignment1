@@ -23,7 +23,7 @@ class HouseAdapter(mContext: Context,
                    private val itemClickListener: HouseItemClickListener? = null) : RecyclerView.Adapter<HouseAdapter.Viewholder>() {
 
     private val mContext: Context = mContext
-    private val mPosts: List<House> = mPosts
+    private var mPosts: List<House> = mPosts
 
 
 
@@ -96,6 +96,11 @@ class HouseAdapter(mContext: Context,
         }
 
         popupMenu.show()
+    }
+
+    fun updateList(newList: List<House>) {
+        mPosts = newList
+        notifyDataSetChanged()
     }
 
 

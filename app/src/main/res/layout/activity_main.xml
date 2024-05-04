@@ -13,6 +13,7 @@
         android:layout_alignParentStart="true"
         android:background="@color/blue"
 android:elevation="10dp"
+        android:padding="8dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:layout_marginStart="0dp"
@@ -21,27 +22,52 @@ android:elevation="10dp"
         android:id="@+id/top"
         android:orientation="horizontal">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="15dp"
-            android:text="Logout"
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="20dp"
+            android:layout_margin="5dp"
+        android:tint="@color/white"
+            android:rotation="270"
+            android:layout_weight="2"
+           android:src="@drawable/upload"
             android:id="@+id/logout"
             android:layout_marginStart="10dp"
             android:textColor="@color/white"
             android:textAlignment="textEnd"
             android:textStyle="bold"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="15dp"
-            android:text="Map"
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="20dp"
+            android:layout_margin="5dp"
+            android:tint="@color/white"
+            android:layout_weight="2"
+         android:src="@drawable/map"
             android:id="@+id/mapview"
             android:layout_marginStart="10dp"
             android:textColor="@color/white"
             android:textAlignment="textEnd"
             android:textStyle="bold"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+
+            android:layout_weight="4"
+            android:layout_marginStart="10dp"
+            android:textColor="@color/white"
+            android:textAlignment="textEnd"
+            android:textStyle="bold"/>
+
+        <ImageView
+            android:visibility="invisible"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:src="@drawable/sort"
+            android:id="@+id/filterbtn"
+            android:layout_weight="2"
+            android:layout_gravity="end"
+            android:paddingVertical="5dp"
+            app:tint="@color/white" />
 
     </LinearLayout>
 
