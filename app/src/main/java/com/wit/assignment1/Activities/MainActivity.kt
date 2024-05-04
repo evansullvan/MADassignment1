@@ -1,14 +1,12 @@
 package com.wit.assignment1.Activities
 
-
-
-
-
 import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.os.Build
+
 import android.os.Bundle
 import android.view.View
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.ActionBar
@@ -40,8 +38,9 @@ class MainActivity : AppCompatActivity() {
     private val NAV_ADD: Int = com.wit.assignment1.R.id.nav_add
     private val NAV_PROFILE: Int = R.id.nav_profile
 
-    private lateinit var logout: TextView
-    private lateinit var mapviewbtn: TextView
+    private lateinit var logout: ImageView
+    private lateinit var filter: ImageView
+    private lateinit var mapviewbtn: ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,6 +53,7 @@ class MainActivity : AppCompatActivity() {
 
         logout = findViewById(R.id.logout)
         mapviewbtn = findViewById(R.id.mapview)
+        filter = findViewById(R.id.filterbtn)
         val mAuth = FirebaseAuth.getInstance()
         val currentUser = mAuth.currentUser
         val fragment: Fragment = AddHouseDetailsFragment() // Replace with your actual fragment
